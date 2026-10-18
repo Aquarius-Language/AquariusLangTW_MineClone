@@ -1,0 +1,118 @@
+Compiled 12 script(s) to C:\OfficialProjects\AquariusLangTW_MineClone\build\aquacraft.wasm
+Website built: C:\OfficialProjects\AquariusLangTW_MineClone\build\web
+Build complete.
+  TCP    127.0.0.1:8765         0.0.0.0:0              LISTENING       21412
+  TCP    127.0.0.1:8765         127.0.0.1:57403        ESTABLISHED     21412
+  TCP    127.0.0.1:57403        127.0.0.1:8765         ESTABLISHED     7684
+ Volume in drive C is Windows
+ Volume Serial Number is 4EED-0F0F
+
+ Directory of C:\OfficialProjects\AquariusLangTW_MineClone\build\web
+
+2026/10/18  下午 02:37    <DIR>          .
+2026/10/18  下午 02:37    <DIR>          ..
+2026/10/18  下午 02:37                24 .aquarius-web-output
+2026/10/18  下午 02:37             1,948 app.mjs
+2026/10/18  下午 02:37            13,016 application-core.mjs
+2026/10/18  下午 02:37            17,041 application-files.mjs
+2026/10/18  下午 02:37             2,025 application-images.mjs
+2026/10/18  下午 02:37            23,023 application-runtime.mjs
+2026/10/18  下午 02:37             6,626 application-serialization.mjs
+2026/10/18  下午 02:37            14,241 application-services.mjs
+2026/10/18  下午 02:37             8,326 application-window.mjs
+2026/10/18  下午 02:37               836 application.mjs
+2026/10/18  下午 02:37               843 array-library.mjs
+2026/10/18  下午 02:37            45,338 asset-000a6890709439dcb251296a838cc5f7506af668d44ecba7b55a87b6192ab962.bin
+2026/10/18  下午 02:37            33,644 asset-0ff9b6b1ee21fdf02d5b06178a8bba3aacd6d8c35c3144e4dfff94e6557328bd.bin
+2026/10/18  下午 02:37            57,644 asset-1760aa9bcc22e9d3c8b7afe489aded671a3a536205c646a167cce106fe08669f.bin
+2026/10/18  下午 02:37            11,370 asset-1b1e043b81a6e71c9dd526d17a28c326c32726a8bc918acccbea34f8efaa7f26.bin
+2026/10/18  下午 02:37            33,644 asset-215ec6d0a7bc2ea4c9647a44c1ede3afdc05c6a8ee94a65d149f2672e48deae7.bin
+2026/10/18  下午 02:37             4,561 asset-30103f249551eb57e184b1b11f3c7daa4ec4244aa976c903c0ab05219f3b05a3.bin
+2026/10/18  下午 02:37            30,720 asset-39f1f9601bf62c564b10552a7bb00224945019eed7d60c6a2ea85d03194409df.bin
+2026/10/18  下午 02:37            39,633 asset-3b7c159dc405a166999e2d5ed41aef0ac8048c4045d503e118c4f7e24bed426d.bin
+2026/10/18  下午 02:37            19,244 asset-3ff71b02bc417b8dc40aa012d77a3e153a0afb39ec83ecb793575459dd5677f1.bin
+2026/10/18  下午 02:37            13,484 asset-400845b96bfb770e4731eb0c1576729461c2b50e102fb4d5e3f0a7e64e4859d1.bin
+2026/10/18  下午 02:37            76,953 asset-4fa7dfe0b9e5eef2c46198ff3df101f74f8ceb4d969954748be61cc6618389f6.bin
+2026/10/18  下午 02:37            13,484 asset-54316e9546b91618028ccb04f888a8facbfb79e35d3c8380f3957f6f053a524f.bin
+2026/10/18  下午 02:37         1,152,044 asset-5ce84992ed9f6ada8a206d57503de341bcdcfe598f68ed507977bfcb700e1335.bin
+2026/10/18  下午 02:37             1,893 asset-5cfb920e76c5da0f5aae4a62518bd368501de772ad92973174f41ce5fdf8482e.bin
+2026/10/18  下午 02:37           960,044 asset-6a1390e768f3a323c3bf84274240e9c23d1c2b51f9eb9ce18fc638e67e1ebf82.bin
+2026/10/18  下午 02:37            13,484 asset-6d7767060ece77d983bfa03013f6dfc5b5a5049896370df023a82d59ba101a2b.bin
+2026/10/18  下午 02:37            10,654 asset-6f3fcdcabdac0f5aaa530ccde0d8591e5b9534034578a833dd1baf28ba10bbbf.bin
+2026/10/18  下午 02:37            15,404 asset-6f70142710280e7b3e8d1289e930456a963eb9fb510a19cfea6f9804c099d5e2.bin
+2026/10/18  下午 02:37            33,644 asset-76a715e6be44636aa30c4068ace44e06e7aa90b217c6ddd805b612c7ee606e0b.bin
+2026/10/18  下午 02:37            48,044 asset-891ea1c6cc2d9d866ef36cd29385418bb372a1d23ea5a1f7ffde5d2601627640.bin
+2026/10/18  下午 02:37             2,473 asset-8e47d784650d17660dc1684af60b9f6ad2353036ea62070d34f2bb51d9f71775.bin
+2026/10/18  下午 02:37            33,644 asset-8ef821b7059b04b18ead5e7c9bbe29247831d519aa95a33822649ec17a73fb93.bin
+2026/10/18  下午 02:37             2,420 asset-8f4a504b70443e5a81755d91f5f6b8ff01c875b3622dd5c91c96268143ab356f.bin
+2026/10/18  下午 02:37             2,377 asset-a5320f670c9135e4c1f38c0774818b333cb9d09751fe2fd92b34b129ed316062.bin
+2026/10/18  下午 02:37            13,484 asset-b431d1805e102289c27792c42ee46e9779a29c68aa4105f9da2f0e43c7e13150.bin
+2026/10/18  下午 02:37             5,804 asset-c6b9d0e945e466134a79b9a398eb678513f9ae6bd5b710f4ff3cd45e138051cf.bin
+2026/10/18  下午 02:37             5,442 asset-dfa13bbbbccbedf5db71c7a900fb404f4505193706d00b440d75ae50af5c3671.bin
+2026/10/18  下午 02:37             4,552 asset-e45f456562b35b800e7370945da49b552848532dcf726cac760a43b01db46165.bin
+2026/10/18  下午 02:37           768,044 asset-ee07feddb9f985a372e08e8128724f9d3bdd5ced06c8682a5f25aca1dfed8014.bin
+2026/10/18  下午 02:37             3,129 audio-core.mjs
+2026/10/18  下午 02:37             2,852 audio-registration.mjs
+2026/10/18  下午 02:37            35,651 AUDIO-THIRD-PARTY-NOTICES.txt
+2026/10/18  下午 02:37             1,560 audio-worklet.mjs
+2026/10/18  下午 02:37             5,373 audio.mjs
+2026/10/18  下午 02:37           283,895 audio.wasm
+2026/10/18  下午 02:37            17,955 capability-host.mjs
+2026/10/18  下午 02:37             8,451 codec-engine.mjs
+2026/10/18  下午 02:37               729 codec-worker.mjs
+2026/10/18  下午 02:37             7,134 dynamic-library-core.mjs
+2026/10/18  下午 02:37               992 dynamic-library.mjs
+2026/10/18  下午 02:37               784 hash-library.mjs
+2026/10/18  下午 02:37             4,985 host.mjs
+2026/10/18  下午 02:37               879 index.html
+2026/10/18  下午 02:37            26,387 legacy-constants.json
+2026/10/18  下午 02:37             6,187 legacy.mjs
+2026/10/18  下午 02:37             6,413 mediapipe.mjs
+2026/10/18  下午 02:37               991 mesh-data.mjs
+2026/10/18  下午 02:37             2,597 MINIAUDIO-LICENSE.txt
+2026/10/18  下午 02:37            12,190 network-registration.mjs
+2026/10/18  下午 02:37             6,632 network.mjs
+2026/10/18  下午 02:37             1,073 ONNX-LICENSE.txt
+2026/10/18  下午 02:37             5,357 onnx-registration.mjs
+2026/10/18  下午 02:37           338,088 ONNX-THIRD-PARTY-NOTICES.txt
+2026/10/18  下午 02:37             5,723 onnx.mjs
+2026/10/18  下午 02:37            53,057 ort-wasm-simd-threaded.asyncify.mjs
+2026/10/18  下午 02:37        26,781,914 ort-wasm-simd-threaded.asyncify.wasm
+2026/10/18  下午 02:37            66,349 ort.webgpu.min.mjs
+2026/10/18  下午 02:37             1,659 package-paths.mjs
+2026/10/18  下午 02:37             5,740 pose.wasm
+2026/10/18  下午 02:37             4,043 processing-input.mjs
+2026/10/18  下午 02:37            36,022 processing.mjs
+2026/10/18  下午 02:37           170,418 program.json
+2026/10/18  下午 02:37         2,587,099 program.wasm
+2026/10/18  下午 02:37               979 shader-layout.mjs
+2026/10/18  下午 02:37             1,461 startup.mjs
+2026/10/18  下午 02:37               940 string-library.mjs
+2026/10/18  下午 02:37               580 surface-size.mjs
+2026/10/18  下午 02:37             1,508 surface.mjs
+2026/10/18  下午 02:37             1,752 terminal.mjs
+2026/10/18  下午 02:37             3,359 thread-worker.mjs
+2026/10/18  下午 02:37             4,606 threads.mjs
+2026/10/18  下午 02:37             2,319 values.mjs
+2026/10/18  下午 02:37               738 vendor-earcut.LICENSE.txt
+2026/10/18  下午 02:37             6,624 vendor-earcut.mjs
+2026/10/18  下午 02:37             1,069 vendor-fflate.LICENSE.txt
+2026/10/18  下午 02:37            32,196 vendor-fflate.mjs
+2026/10/18  下午 02:37             1,067 vendor-gl-matrix.LICENSE.txt
+2026/10/18  下午 02:37            53,867 vendor-gl-matrix.mjs
+2026/10/18  下午 02:37            11,358 vendor-magick.LICENSE.txt
+2026/10/18  下午 02:37           324,907 vendor-magick.mjs
+2026/10/18  下午 02:37           221,910 vendor-magick.NOTICE.txt
+2026/10/18  下午 02:37        15,447,097 vendor-magick.wasm
+2026/10/18  下午 02:37            11,722 virtual-files.mjs
+2026/10/18  下午 02:37            20,392 wasm-host.mjs
+2026/10/18  下午 02:37             5,276 wasm-manifest.mjs
+2026/10/18  下午 02:37                46 wasm.mjs
+2026/10/18  下午 02:37            11,191 webcam.mjs
+2026/10/18  下午 02:37             5,699 wgpu-textures.mjs
+2026/10/18  下午 02:37               184 wgpu-uniforms.mjs
+2026/10/18  下午 02:37             7,652 wgpu-window.mjs
+2026/10/18  下午 02:37            25,010 wgpu.mjs
+             102 File(s)     50,238,936 bytes
+               2 Dir(s)  35,770,056,704 bytes free
+finished 

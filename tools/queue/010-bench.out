@@ -1,0 +1,7 @@
+Compiled 1 script(s) to C:\OfficialProjects\AquariusLangTW_MineClone\tools\bench\bench.wasm
+fill 32768 ms 0.9084
+neighbor scan ms 0.5730000000000022 14817
+calls 200k ms 5.551299999999998 2
+append 100k ms 6.623799999999999 100000
+int hash 100k ms 10.088000000000001 49998.68287627011
+floor 100k ms 2.8525000000000063 1799932000

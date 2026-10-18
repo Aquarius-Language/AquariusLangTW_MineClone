@@ -1,0 +1,330 @@
+## 繪製管線（Rendering pipeline, built on the AquariusLang WGPU module）
+每影格：太陽陰影貼圖 → 天空與不透明地形（HDR，alpha 為線性深度）→ 複製後疊加水與玻璃（折射、
+反射、深度顏色）→ 方塊外框 → 泛光降/升取樣 → ACES 色調映射合成 → 介面 → 呈現。
+Per frame: sun shadow map -> sky + opaque terrain (HDR, alpha = linear depth) -> copy, then water and
+glass with refraction/reflection -> block outline -> bloom chain -> ACES composite -> UI -> present.
+所有地形都是每區塊一個儲存緩衝區，以 DrawProcedural 從 vertex_index 讀取（不需每格網格或頂點上傳）。
+Terrain is one storage buffer per chunk drawn with DrawProcedural (vertex pulling, no per-block meshes).
+##
+變數 G = 0;
+變數 裝置 = 0;
+變數 窗 = 0;
+變數 檔 = 0;
+變數 數 = 0;
+
+變數 地形著色 = 0; 變數 陰影著色 = 0; 變數 水著色 = 0; 變數 天空著色 = 0; 變數 後製著色 = 0; 變數 介面著色 = 0; 變數 外框著色 = 0;
+變數 實體著色 = 0; 變數 裂痕著色 = 0;
+變數 反照紋理 = 0; 變數 材質紋理 = 0; 變數 字型紋理 = 0; 變數 物品紋理 = 0;
+變數 實體容量 = 600;          # 每影格最多繪製的實體數 Max entities per frame
+變數 實體緩衝 = 0; 變數 光源緩衝 = 0;
+變數 最多光源 = 32;
+變數 場景A = 0; 變數 場景B = 0; 變數 場景A紋 = 0; 變數 場景B紋 = 0;
+變數 泛光 = []; 變數 泛光紋 = [];
+變數 輸出 = 0;
+變數 陰影 = 0; 變數 陰影紋 = 0; 變數 陰影尺寸 = 0;
+變數 假紋 = 0; 變數 假目標 = 0;
+變數 寬 = 0; 變數 高 = 0; 變數 內寬 = 0; 變數 內高 = 0;
+變數 比例 = 1.0d;
+變數 介面緩衝 = 0; 變數 介面長度 = 0;
+變數 繪製區塊數 = 0;
+變數 截圖路徑 = "";
+變數 要求截圖 = 函式(路徑) { 截圖路徑 = 路徑; };
+變數 影格 = 0;
+
+變數 讀取 = 函式(路徑) { 回傳 檔.ReadAssetText(路徑, "utf-8"); };
+
+變數 建立著色器 = 函式(共用, 路徑) {
+    變數 全文 = 讀取(路徑);
+    變數 部 = 字串.分割(全文, "//#fragment");
+    變數 頂點 = 字串.取代(部[0], "//#vertex", "");
+    回傳 裝置.CreateShader(共用 + 頂點, 共用 + 部[1]);
+};
+
+變數 字型寬 = 128; 變數 字型高 = 60;
+變數 初始化 = 函式(wgpu, 視窗, 數學, 字型) {
+    G = wgpu; 窗 = 視窗; 數 = 數學;
+    字型寬 = 字型.寬; 字型高 = 字型.高;
+    檔 = 匯入("Files");
+    裝置 = G.CreateDevice(窗);
+    變數 共用 = 讀取("shaders/common.wgsl");
+    地形著色 = 建立著色器(共用, "shaders/terrain.wgsl");
+    陰影著色 = 建立著色器(共用, "shaders/shadow.wgsl");
+    水著色 = 建立著色器(共用, "shaders/water.wgsl");
+    天空著色 = 建立著色器(共用, "shaders/sky.wgsl");
+    外框著色 = 建立著色器(共用, "shaders/outline.wgsl");
+    實體著色 = 建立著色器(共用, "shaders/entity.wgsl");
+    裂痕著色 = 建立著色器(共用, "shaders/crack.wgsl");
+    後製著色 = 建立著色器("", "shaders/post.wgsl");
+    介面著色 = 建立著色器("", "shaders/ui.wgsl");
+    反照紋理 = 裝置.LoadTexture("assets/textures/albedo.rgba.gz", 256, 128, "rgba8unorm-srgb", "2d", 6);
+    材質紋理 = 裝置.LoadTexture("assets/textures/material.rgba.gz", 256, 128, "rgba8unorm", "2d", 6);
+    字型紋理 = 裝置.LoadTexture("assets/ui/font.rgba.gz", 字型寬, 字型高, "rgba8unorm", "2d", 1);
+    物品紋理 = 裝置.LoadTexture("assets/textures/items.rgba.gz", 256, 128, "rgba8unorm-srgb", "2d", 1);
+    實體緩衝 = 裝置.CreateBuffer(實體容量 * 12);
+    光源緩衝 = 裝置.CreateBuffer(4 + 最多光源 * 4);
+    假目標 = 裝置.CreateRenderTarget(4, 4, "rgba16float");
+    假目標.Clear([0, 0, 0, 1]);
+    假紋 = 假目標.GetTexture();
+    地形著色.SetTexture("albedoTex", 反照紋理); 地形著色.SetTexture("materialTex", 材質紋理);
+    陰影著色.SetTexture("albedoTex", 反照紋理);
+    水著色.SetTexture("albedoTex", 反照紋理);
+    介面著色.SetTexture("fontTex", 字型紋理); 介面著色.SetTexture("albedoTex", 反照紋理); 介面著色.SetTexture("itemTex", 物品紋理);
+    實體著色.SetTexture("albedoTex", 反照紋理); 實體著色.SetTexture("itemTex", 物品紋理);
+    實體著色.SetBuffer("ents", 實體緩衝); 實體著色.SetBuffer("lights", 光源緩衝);
+    地形著色.SetBuffer("lights", 光源緩衝);
+    回傳 裝置;
+};
+
+變數 設定陰影 = 函式(尺寸) {
+    如果 (尺寸 == 陰影尺寸) { 回傳 0; }
+    如果 (陰影尺寸 > 0) { 陰影.Dispose(); }
+    陰影尺寸 = 尺寸;
+    如果 (尺寸 > 0) {
+        陰影 = 裝置.CreateRenderTarget(尺寸, 尺寸, "rgba16float");
+        陰影.SetState({"depth": "less", "blend": "replace", "cull": "front"});
+        陰影紋 = 陰影.GetTexture();
+        地形著色.SetTexture("shadowTex", 陰影紋); 水著色.SetTexture("shadowTex", 陰影紋);
+    } 否則 {
+        地形著色.SetTexture("shadowTex", 假紋); 水著色.SetTexture("shadowTex", 假紋);
+    }
+    回傳 0;
+};
+
+變數 釋放尺寸目標 = 函式() {
+    如果 (寬 > 0) {
+        場景A.Dispose(); 場景B.Dispose(); 輸出.Dispose();
+        迴圈 (變數 i = 0; i < 長度(泛光); i++) { 泛光[i].Dispose(); }
+    }
+    泛光 = []; 泛光紋 = [];
+};
+
+# 依視窗大小與繪製比例建立目標。 Size-dependent targets.
+變數 調整大小 = 函式(像素寬, 像素高, 繪製比例) {
+    如果 (像素寬 < 1 || 像素高 < 1) { 回傳 假; }
+    如果 (像素寬 == 寬 && 像素高 == 高 && 繪製比例 == 比例) { 回傳 假; }
+    釋放尺寸目標();
+    寬 = 像素寬; 高 = 像素高; 比例 = 繪製比例;
+    內寬 = 0; 內寬 += 寬 * 比例; 內高 = 0; 內高 += 高 * 比例;
+    如果 (內寬 < 64) { 內寬 = 64; } 如果 (內高 < 64) { 內高 = 64; }
+    場景A = 裝置.CreateRenderTarget(內寬, 內高, "rgba16float");
+    場景B = 裝置.CreateRenderTarget(內寬, 內高, "rgba16float");
+    場景A紋 = 場景A.GetTexture(); 場景B紋 = 場景B.GetTexture();
+    變數 w = 內寬; 變數 h = 內高;
+    迴圈 (變數 i = 0; i < 5; i++) {
+        w = (w + 1) / 2; h = (h + 1) / 2;
+        如果 (w < 1) { w = 1; } 如果 (h < 1) { h = 1; }
+        變數 t = 裝置.CreateRenderTarget(w, h, "rgba16float");
+        泛光 = 加入(泛光, t); 泛光紋 = 加入(泛光紋, t.GetTexture());
+    }
+    輸出 = 裝置.CreateRenderTarget(寬, 高, "rgba8unorm");
+    水著色.SetTexture("sceneTex", 場景A紋);
+    外框著色.SetTexture("sceneTex", 場景A紋);
+    裂痕著色.SetTexture("sceneTex", 場景A紋);
+    回傳 真;
+};
+
+變數 上傳區塊 = 函式(區塊, 浮點, 不透明數, 半透明數) {
+    變數 舊 = 區塊["緩衝"];
+    如果 (舊 != 0 && 區塊["數"] == 長度(浮點)) {
+        舊.Write(浮點);
+    } 否則 {
+        如果 (舊 != 0) { 舊.Dispose(); }
+        區塊["緩衝"] = 裝置.CreateBuffer(浮點);
+    }
+    區塊["數"] = 長度(浮點);
+    區塊["不透明"] = 不透明數;
+    區塊["半透明"] = 半透明數;
+    區塊["網格"] = 真;
+};
+
+變數 釋放區塊 = 函式(區塊) {
+    如果 (區塊["緩衝"] != 0) { 區塊["緩衝"].Dispose(); 區塊["緩衝"] = 0; }
+};
+
+# 共用影格參數寫入一個著色器。 Write shared frame uniforms into one shader.
+變數 寫入影格 = 函式(s, f) {
+    s.Set("viewProj", f["vp"]);
+    s.Set("invViewProj", f["ivp"]);
+    s.Set("shadowMat", f["shadow"]);
+    s.Set("camera", f["camera"]);
+    s.Set("sunDir", f["sunDir"]);
+    s.Set("sunColor", f["sunColor"]);
+    s.Set("ambient", f["ambient"]);
+    s.Set("horizon", f["horizon"]);
+    s.Set("screen", [內寬 * 1.0d, 內高 * 1.0d, 1.0d / 內寬, 1.0d / 內高]);
+    s.Set("params", f["params"]);
+    s.Set("params2", f["params2"]);
+};
+
+# 視錐剔除：從 viewProj 取平面，測試區塊 AABB（相機相對座標）。 Frustum test against chunk AABBs.
+變數 視錐平面 = 函式(m) {
+    變數 平面 = [];
+    變數 列 = 函式(r) { 回傳 [m[r], m[4 + r], m[8 + r], m[12 + r]]; };
+    變數 r0 = 列(0); 變數 r1 = 列(1); 變數 r2 = 列(2); 變數 r3 = 列(3);
+    平面 = 加入(平面, [r3[0] + r0[0], r3[1] + r0[1], r3[2] + r0[2], r3[3] + r0[3]]);
+    平面 = 加入(平面, [r3[0] - r0[0], r3[1] - r0[1], r3[2] - r0[2], r3[3] - r0[3]]);
+    平面 = 加入(平面, [r3[0] + r1[0], r3[1] + r1[1], r3[2] + r1[2], r3[3] + r1[3]]);
+    平面 = 加入(平面, [r3[0] - r1[0], r3[1] - r1[1], r3[2] - r1[2], r3[3] - r1[3]]);
+    平面 = 加入(平面, [r2[0], r2[1], r2[2], r2[3]]);
+    回傳 平面;
+};
+
+變數 在視錐內 = 函式(平面, x0, y0, z0, x1, y1, z1) {
+    迴圈 (變數 i = 0; i < 長度(平面); i++) {
+        變數 p = 平面[i];
+        變數 px = x0; 變數 py = y0; 變數 pz = z0;
+        如果 (p[0] >= 0) { px = x1; } 如果 (p[1] >= 0) { py = y1; } 如果 (p[2] >= 0) { pz = z1; }
+        如果 (p[0] * px + p[1] * py + p[2] * pz + p[3] < 0) { 回傳 假; }
+    }
+    回傳 真;
+};
+
+變數 後製 = 函式(目標, 來源紋, 泛光來源, 模式, 參數y, 參數z, 參數w, 紋素x, 紋素y) {
+    後製著色.SetTexture("source", 來源紋);
+    後製著色.SetTexture("bloomTex", 泛光來源);
+    後製著色.Set("texel", [紋素x, 紋素y, 0, 0]);
+    後製著色.Set("params", [模式, 參數y, 參數z, 參數w]);
+    後製著色.Set("params2", [0.22d, 0, 0, 0]);
+    目標.DrawProcedural(後製著色, 3);
+};
+
+# 繪製一個影格。f：影格資料；區塊們：已網格化區塊；外框：[有, x, y, z]（相機相對）。
+變數 繪製 = 函式(f, 區塊們, 外框, 設定) {
+    如果 (寬 < 1) { 回傳 0; }
+    影格++;
+    變數 cam = f["camera"];
+    變數 cx = cam[0]; 變數 cy = cam[1]; 變數 cz = cam[2];
+    寫入影格(地形著色, f); 寫入影格(水著色, f); 寫入影格(天空著色, f); 寫入影格(實體著色, f);
+    # 光源：數量在前，之後每個 x, y, z, 等級。 Lights: count first, then x, y, z, level each.
+    變數 光 = f["lights"];
+    變數 光數 = 長度(光) / 4;
+    如果 (光數 > 最多光源) { 光數 = 最多光源; }
+    光源緩衝.WriteRange(0, [光數 * 1.0d, 0, 0, 0]);
+    如果 (光數 > 0) { 光源緩衝.WriteRange(4, 陣列.切片(光, 0, 光數 * 4)); }
+    # 1. 陰影貼圖。 Shadow map.
+    如果 (陰影尺寸 > 0 && f["sunColor"][3] > 0.5d) {
+        寫入影格(陰影著色, f);
+        陰影.Clear([1, 1, 0, 1]);
+        變數 範圍 = f["shadowRange"] + 16.0d;
+        迴圈 (變數 i = 0; i < 長度(區塊們); i++) {
+            變數 c = 區塊們[i];
+            如果 (c["不透明"] > 0) {
+                變數 dx = c["cx"] * 16 + 8 - cx; 變數 dz = c["cz"] * 16 + 8 - cz;
+                如果 (dx * dx + dz * dz < 範圍 * 範圍) {
+                    陰影著色.SetBuffer("quads", c["緩衝"]);
+                    陰影.DrawProcedural(陰影著色, c["不透明"] * 6);
+                }
+            }
+        }
+    }
+    # 2. 天空與不透明地形。 Sky and opaque terrain.
+    場景A.Clear([0, 0, 0, 1]);
+    場景A.SetState({"depth": "none", "blend": "replace", "cull": "none"});
+    場景A.DrawProcedural(天空著色, 3);
+    場景A.SetState({"depth": "less", "blend": "replace", "cull": "back"});
+    變數 平面 = 視錐平面(f["vp"]);
+    繪製區塊數 = 0;
+    變數 可見 = [];
+    迴圈 (變數 i = 0; i < 長度(區塊們); i++) {
+        變數 c = 區塊們[i];
+        變數 x0 = c["cx"] * 16 - cx; 變數 z0 = c["cz"] * 16 - cz;
+        如果 (在視錐內(平面, x0, -cy, z0, x0 + 16, c["最高"] + 2 - cy, z0 + 16)) {
+            可見 = 加入(可見, c);
+            如果 (c["不透明"] > 0) {
+                地形著色.SetBuffer("quads", c["緩衝"]);
+                場景A.DrawProcedural(地形著色, c["不透明"] * 6);
+                繪製區塊數++;
+            }
+        }
+    }
+    # 2b. 實體（掉落物、粒子、怪物）與地形共用深度。 Entities share the terrain depth buffer.
+    變數 實 = f["ents"];
+    變數 實數 = 長度(實) / 12;
+    如果 (實數 > 實體容量) { 實數 = 實體容量; }
+    如果 (實數 > 0) {
+        實體緩衝.WriteRange(0, 陣列.切片(實, 0, 實數 * 12));
+        場景A.SetState({"depth": "less", "blend": "replace", "cull": "none"});
+        場景A.DrawProcedural(實體著色, 實數 * 36);
+    }
+    # 3. 複製並疊加水與玻璃。 Copy, then water and glass.
+    場景B.Clear([0, 0, 0, 1]);
+    場景B.SetState({"depth": "none", "blend": "replace", "cull": "none"});
+    後製(場景B, 場景A紋, 假紋, 0, 0, 0, 0, 0, 0);
+    場景B.SetState({"depth": "less", "blend": "replace", "cull": "none"});
+    迴圈 (變數 i = 0; i < 長度(可見); i++) {
+        變數 c = 可見[i];
+        如果 (c["半透明"] > 0) {
+            水著色.SetBuffer("quads", c["緩衝"]);
+            場景B.DrawProcedural(水著色, c["半透明"] * 6, c["不透明"] * 6);
+        }
+    }
+    如果 (外框[0]) {
+        寫入影格(外框著色, f);
+        外框著色.Set("params2", [0, 外框[1], 外框[2], 外框[3]]);
+        場景B.SetState({"depth": "none", "blend": "alpha", "cull": "none"});
+        場景B.DrawProcedural(外框著色, 72);
+        # 挖掘裂痕。 Mining cracks.
+        如果 (長度(外框) > 4 && 外框[4] > 0) {
+            寫入影格(裂痕著色, f);
+            裂痕著色.Set("params2", [外框[4], 外框[1], 外框[2], 外框[3]]);
+            場景B.DrawProcedural(裂痕著色, 36);
+        }
+    }
+    # 4. 泛光。 Bloom.
+    變數 泛光強度 = 設定["bloom"];
+    如果 (泛光強度 > 0) {
+        變數 來源 = 場景B紋; 變數 來源寬 = 內寬; 變數 來源高 = 內高;
+        迴圈 (變數 i = 0; i < 長度(泛光); i++) {
+            變數 t = 泛光[i];
+            t.SetState({"depth": "none", "blend": "replace", "cull": "none"});
+            變數 模式 = 2;
+            如果 (i == 0) { 模式 = 1; }
+            後製(t, 來源, 假紋, 模式, 1.2d, 1.0d, 0, 1.0d / 來源寬, 1.0d / 來源高);
+            來源 = 泛光紋[i]; 來源寬 = t.Width; 來源高 = t.Height;
+        }
+        迴圈 (變數 i = 長度(泛光) - 1; i > 0; i -= 1) {
+            變數 t = 泛光[i - 1];
+            t.SetState({"depth": "none", "blend": "add", "cull": "none"});
+            後製(t, 泛光紋[i], 假紋, 3, 0, 1.0d, 0, 1.0d / 泛光[i].Width, 1.0d / 泛光[i].Height);
+        }
+    }
+    # 5. 合成。 Composite.
+    輸出.SetState({"depth": "none", "blend": "replace", "cull": "none"});
+    變數 bloomTex = 泛光紋[0];
+    如果 (泛光強度 <= 0) { bloomTex = 假紋; }
+    後製(輸出, 場景B紋, bloomTex, 4, f["exposure"], 泛光強度, f["params"][0], 0, 0);
+    # 6. 介面。 UI.
+    如果 (介面長度 > 0) {
+        介面著色.Set("screen", [寬 * 1.0d, 高 * 1.0d, 0, 0]);
+        輸出.SetState({"depth": "none", "blend": "alpha", "cull": "none"});
+        輸出.DrawBuffer(介面著色, 介面緩衝);
+    }
+    如果 (截圖路徑 != "") { 輸出.Save(截圖路徑); 印出("saved", 截圖路徑); 截圖路徑 = ""; }
+    裝置.Present(輸出);
+    回傳 0;
+};
+
+變數 設定介面 = 函式(浮點) {
+    如果 (長度(浮點) == 0) { 介面長度 = 0; 回傳 0; }
+    如果 (介面長度 == 長度(浮點)) {
+        介面緩衝.Write(浮點);
+    } 否則 {
+        如果 (介面長度 > 0) { 介面緩衝.Dispose(); }
+        介面緩衝 = 裝置.CreateVertexBuffer(浮點);
+    }
+    介面長度 = 長度(浮點);
+    回傳 0;
+};
+
+# 只畫介面（載入畫面），不畫世界。 UI-only frame for loading screens.
+變數 只畫介面 = 函式(背景) {
+    如果 (寬 < 1) { 回傳 0; }
+    輸出.Clear(背景);
+    如果 (介面長度 > 0) {
+        介面著色.Set("screen", [寬 * 1.0d, 高 * 1.0d, 0, 0]);
+        輸出.SetState({"depth": "none", "blend": "alpha", "cull": "none"});
+        輸出.DrawBuffer(介面著色, 介面緩衝);
+    }
+    裝置.Present(輸出);
+    回傳 0;
+};

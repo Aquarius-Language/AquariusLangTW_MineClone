@@ -1,0 +1,22 @@
+## 自動測試腳本：介面語言（繁體中文預設、切換到英文再切回）。
+Automated language test: 繁體中文 by default, switch to English and back, capturing each screen.
+##
+變數 啟用 = 真;
+變數 全新 = 真;
+變數 步驟 = [
+    ["wait", 90], ["capture", "cap-l01-title-zh"],
+    ["state", "settings"], ["wait", 5], ["capture", "cap-l02-settings-zh"],
+    ["lang"], ["wait", 5], ["capture", "cap-l03-settings-en"],
+    ["state", "title"], ["wait", 5], ["capture", "cap-l04-title-en"],
+    ["lang"], ["play"], ["wait", 20],
+    ["give", 111, 1], ["give", 17, 3], ["give", 5, 6], ["give", 9, 4], ["give", 101, 2], ["slot", 1], ["wait", 3],
+    ["msg", "{0} broke!", "Stone Pickaxe"], ["wait", 3], ["capture", "cap-l05-hud-zh"],
+    ["openinv"], ["mouse", 0.2766d, 0.679d], ["wait", 5], ["capture", "cap-l06-tooltip-tool-zh"],
+    ["mouse", 0.3047d, 0.679d], ["wait", 5], ["capture", "cap-l07-tooltip-ore-zh"],
+    ["mouse", 0.5578d, 0.405d], ["wait", 5], ["capture", "cap-l08-recipe-zh"],
+    ["lang"], ["wait", 5], ["capture", "cap-l09-recipe-en"],
+    ["mouse", 0.2766d, 0.679d], ["wait", 5], ["capture", "cap-l10-tooltip-tool-en"],
+    ["lang"], ["close"], ["state", "pause"], ["wait", 5], ["capture", "cap-l11-pause-zh"],
+    ["state", "dead"], ["wait", 5], ["capture", "cap-l12-dead-zh"],
+    ["quit"]
+];

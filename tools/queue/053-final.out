@@ -1,0 +1,21 @@
+Compiled 12 script(s) to C:\OfficialProjects\AquariusLangTW_MineClone\build\aquacraft.wasm
+Website built: C:\OfficialProjects\AquariusLangTW_MineClone\build\web
+Executable built: C:\OfficialProjects\AquariusLangTW_MineClone\build\AquaCraft.exe
+Build complete.
+build exit 0 
+AquaCraft.exe
+aquacraft.wasm
+web
+build-test.cmd
+build.cmd
+debug
+gen_font.py
+gen_sounds.py
+gen_textures.py
+queue
+runjob.ps1
+sheet.py
+sync
+watch.cmd
+watch.ps1
+finished 

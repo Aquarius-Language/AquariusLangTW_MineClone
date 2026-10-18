@@ -1,0 +1,139 @@
+## 語言（Localization）：繁體中文與英文。介面文字以英文為鍵，查表得到中文。
+主程式只匯入一次，再把同一個模組傳給介面、背包介面與物品模組，讓語言設定處處一致。
+UI strings are keyed by their English text and looked up for 繁體中文. main.aqua imports this
+module once and hands the same instance to the UI modules so the language switch applies everywhere.
+新增中文字後請執行 tools/gen_font.py，字型圖集只收錄用到的字。
+After adding Chinese text, run tools/gen_font.py: the font atlas only contains characters in use.
+##
+變數 語言 = "zh";
+變數 版本 = 0;      # 每次切換加一，讓快取的介面重建 Bumped on every switch so cached HUDs rebuild
+
+變數 設定語言 = 函式(代碼) {
+    如果 (代碼 != "en") { 代碼 = "zh"; }
+    如果 (代碼 != 語言) { 語言 = 代碼; 版本 += 1; }
+};
+變數 是中文 = 函式() { 回傳 語言 == "zh"; };
+變數 名稱 = 函式(代碼) { 如果 (代碼 == "en") { 回傳 "English"; } 回傳 "繁體中文"; };
+
+變數 表 = {
+    "AquaCraft": "星泉無垠",
+    "Survive, gather and build - written in AquariusLang on WebGPU": "生存、採集、建造 — 以星泉語言在 WebGPU 上打造",
+    "Play": "開始遊戲",
+    "New World": "新世界",
+    "Settings": "設定",
+    "Controls": "操作說明",
+    "WASD  move    Mouse  look": "WASD 移動    滑鼠 轉動視角",
+    "Space jump    Shift  sprint": "空白鍵 跳躍  Shift 衝刺",
+    "Hold left  mine / attack": "按住左鍵 挖掘／攻擊",
+    "Right  place / use": "右鍵 放置／使用",
+    "E  inventory    Q  drop": "E 背包    Q 丟出物品",
+    "1-9 / wheel  hotbar": "1-9／滾輪 選擇快捷列",
+    "Esc  pause   F3  debug info": "Esc 暫停    F3 除錯資訊",
+    "Inventory": "背包",
+    "Punch trees, craft tools, light the night": "徒手砍樹、合成工具、點亮黑夜",
+    "Generating terrain... {0}%": "正在生成地形… {0}%",
+    "Done": "完成",
+    "You died": "你死了",
+    "Your items were dropped where you fell": "身上的物品散落在倒下的地方",
+    "Respawn": "重生",
+    "Paused": "已暫停",
+    "Resume": "繼續遊戲",
+    "Save & Title": "存檔並回到標題",
+    "World is saved automatically": "世界會自動存檔",
+    "Language": "語言",
+    "Graphics preset": "畫質預設",
+    "Render distance": "視野距離",
+    "Shadows": "陰影",
+    "Effects": "特效",
+    "Render scale": "渲染比例",
+    "Mouse sensitivity": "滑鼠靈敏度",
+    "Field of view": "視野角度",
+    "Volume": "音量",
+    "Night creatures": "夜行生物",
+    "Show FPS": "顯示 FPS",
+    "Low": "低",
+    "Medium": "中",
+    "High": "高",
+    "Ultra": "極高",
+    "Custom": "自訂",
+    "Off": "關閉",
+    "On": "開啟",
+    "{0} chunks": "{0} 區塊",
+    "{0} deg": "{0} 度",
+    "FPS {0}   chunks {1}/{2}": "FPS {0}   區塊 {1}/{2}",
+    "Seed {0}   time {1}h   edits {2}": "種子 {0}   時刻 {1} 時   修改 {2}",
+    "Backend {0}   {1}x{2}   creatures {3}": "後端 {0}   {1}x{2}   生物 {3}",
+    "{0} broke!": "{0}壞掉了！",
+    "Your tool broke!": "你的工具壞掉了！",
+    "Pointer lock unavailable - move the mouse to look": "無法鎖定滑鼠指標，請直接移動滑鼠轉動視角",
+    "Recipes": "配方",
+    "Crafting": "合成",
+    "Crafting Table": "工作臺",
+    "Chest": "箱子",
+    "Furnace": "熔爐",
+    "Fuel": "燃料",
+    "Needs a crafting table": "需要工作臺",
+    "Click to fill the grid": "點一下自動擺入合成格",
+    "Missing ingredients": "材料不足",
+    "Shapeless": "不限排列",
+    "Hover a recipe": "將滑鼠移到配方上",
+    "Green: craftable": "綠色：可以合成",
+    "Block": "方塊",
+    "Material": "材料",
+    "Pickaxe": "鎬",
+    "Axe": "斧",
+    "Shovel": "鏟",
+    "Sword": "劍",
+    "Durability {0}/{1}": "耐久度 {0}/{1}",
+    "Smelts into {0}": "可熔煉成{0}",
+    "Air": "空氣",
+    "Grass Block": "草方塊",
+    "Dirt": "泥土",
+    "Stone": "石頭",
+    "Sand": "沙子",
+    "Wood Log": "原木",
+    "Leaves": "樹葉",
+    "Glass": "玻璃",
+    "Water": "水",
+    "Planks": "木材",
+    "Gravel": "礫石",
+    "Snowy Grass": "雪地草方塊",
+    "Tall Grass": "高草",
+    "Flower": "花",
+    "Cobblestone": "鵝卵石",
+    "Clay": "黏土",
+    "Coal Ore": "煤礦",
+    "Iron Ore": "鐵礦",
+    "Torch": "火把",
+    "Bedrock": "基岩",
+    "Stick": "木棒",
+    "Coal": "煤炭",
+    "Iron Ingot": "鐵錠",
+    "Wooden Pickaxe": "木鎬",
+    "Stone Pickaxe": "石鎬",
+    "Iron Pickaxe": "鐵鎬",
+    "Wooden Axe": "木斧",
+    "Stone Axe": "石斧",
+    "Iron Axe": "鐵斧",
+    "Wooden Shovel": "木鏟",
+    "Stone Shovel": "石鏟",
+    "Iron Shovel": "鐵鏟",
+    "Wooden Sword": "木劍",
+    "Stone Sword": "石劍",
+    "Iron Sword": "鐵劍"
+};
+
+# 翻譯一段介面文字；沒有對應時原樣回傳（數字、已是中文的字串）。 Translate, or return unchanged.
+變數 譯 = 函式(文) {
+    如果 (語言 == "zh" && 雜湊.包含鍵(表, 文)) { 回傳 表[文]; }
+    回傳 文;
+};
+
+# 帶參數的句型："{0} broke!" 之類；參數若是可翻譯的名稱也一併翻譯。 Templates with {n} arguments.
+變數 格式 = 函式(樣板, 參數) {
+    變數 文 = 譯(樣板);
+    迴圈 (變數 i = 0; i < 長度(參數); i++) {
+        文 = 字串.取代(文, "{" + 字串.轉文字(i) + "}", 譯(字串.轉文字(參數[i])));
+    }
+    回傳 文;
+};

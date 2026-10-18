@@ -1,0 +1,6 @@
+## 自動測試腳本（預設關閉）。tools/debug/debug.aqua 於測試建置時取代本檔。
+Automated test script (off by default). Test builds replace this file with tools/debug/debug.aqua.
+##
+變數 啟用 = 假;
+變數 全新 = 假;
+變數 步驟 = [];

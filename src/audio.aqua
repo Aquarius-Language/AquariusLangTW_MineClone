@@ -1,0 +1,90 @@
+## 音效（Sound）：方塊、腳步、環境聲。音訊裝置在第一次使用者操作後才啟動（瀏覽器自動播放限制）。
+Sound effects and ambience. The device starts after the first user action (browser autoplay rules).
+##
+變數 音 = 0;
+變數 裝置 = 0;
+變數 已啟動 = 假;
+變數 主音量 = 0.8d;
+變數 池 = {};
+變數 輪 = {};
+變數 風 = 0;
+變數 鳥 = 0;
+變數 蟲 = 0;
+變數 鳥計時 = 0.0d;
+變數 種子 = 12345.0d;
+
+變數 名單 = ["break_grass", "break_stone", "break_wood", "break_sand", "break_glass", "splash", "place",
+    "step_grass", "step_stone", "step_wood", "step_sand", "click", "land", "pop", "tool_break", "hurt", "growl", "hit"];
+
+變數 啟動 = 函式() {
+    如果 (已啟動) { 回傳 真; }
+    音 = 匯入("Audio");
+    裝置 = 音.CreateDevice();
+    迴圈 (變數 i = 0; i < 長度(名單); i++) {
+        變數 份 = [];
+        變數 數量 = 3;
+        如果 (字串.開頭是(名單[i], "step")) { 數量 = 2; }
+        迴圈 (變數 k = 0; k < 數量; k++) { 份 = 加入(份, 裝置.Load("assets/sounds/" + 名單[i] + ".wav")); }
+        池[名單[i]] = 份;
+        輪[名單[i]] = 0;
+    }
+    風 = 裝置.Load("assets/sounds/wind_loop.wav"); 風.SetLooping(真); 風.SetVolume(0.0d);
+    鳥 = 裝置.Load("assets/sounds/birds.wav"); 鳥.SetVolume(0.0d);
+    蟲 = 裝置.Load("assets/sounds/crickets.wav"); 蟲.SetLooping(真); 蟲.SetVolume(0.0d);
+    裝置.Start();
+    風.Play(); 蟲.Play();
+    已啟動 = 真;
+    回傳 真;
+};
+
+變數 亂數 = 函式() { 種子 = (種子 * 16807.0d) % 2147483647.0d; 回傳 種子 / 2147483647.0d; };
+
+變數 播放 = 函式(名, 音量, 音高) {
+    如果 (!已啟動 || 主音量 <= 0) { 回傳 假; }
+    變數 份 = 池[名];
+    變數 i = 輪[名];
+    輪[名] = (i + 1) % 長度(份);
+    變數 s = 份[i];
+    s.Stop();
+    s.SetVolume(音量 * 主音量);
+    s.SetPitch(音高 * (0.92d + 亂數() * 0.16d));
+    s.Play();
+    回傳 真;
+};
+
+# 依方塊材質播放破壞／放置／腳步聲。 Material-specific sounds.
+變數 材質名 = ["grass", "stone", "wood", "sand", "glass", "grass"];
+變數 方塊聲 = 函式(材質, 種類) {
+    如果 (種類 == "break") {
+        如果 (材質 == 5) { 播放("splash", 0.6d, 1.0d); 回傳 0; }
+        播放("break_" + 材質名[材質], 0.9d, 1.0d);
+    } 否則如果 (種類 == "place") {
+        播放("place", 0.8d, 1.0d);
+        如果 (材質 == 4) { 播放("break_glass", 0.25d, 1.6d); } 否則 { 播放("break_" + 材質名[材質], 0.35d, 1.3d); }
+    } 否則 {
+        如果 (材質 == 4 || 材質 == 5) { 播放("step_stone", 0.45d, 1.2d); } 否則 { 播放("step_" + 材質名[材質], 0.45d, 1.0d); }
+    }
+    回傳 0;
+};
+
+# 環境聲：白天鳥鳴、夜晚蟲鳴、高處風聲較大；水下降低。 Ambience follows time of day and altitude.
+變數 環境 = 函式(dt, 白天, 高度, 水下, 暫停) {
+    如果 (!已啟動) { 回傳 0; }
+    變數 m = 主音量;
+    如果 (暫停) { m *= 0.35d; }
+    變數 高 = (高度 - 60.0d) / 50.0d;
+    如果 (高 < 0) { 高 = 0.0d; } 如果 (高 > 1) { 高 = 1.0d; }
+    變數 wv = (0.18d + 0.5d * 高) * m;
+    如果 (水下) { wv *= 0.25d; }
+    風.SetVolume(wv);
+    蟲.SetVolume((1.0d - 白天) * 0.5d * m);
+    鳥計時 -= dt;
+    如果 (鳥計時 <= 0 && 白天 > 0.6d && !水下) {
+        鳥計時 = 14.0d + 亂數() * 20.0d;
+        鳥.SetVolume(0.5d * m * 白天);
+        鳥.Stop(); 鳥.Play();
+    }
+    回傳 0;
+};
+
+變數 設定音量 = 函式(v) { 主音量 = v; };

@@ -1,0 +1,27 @@
+## 自動測試腳本：生存流程（採集、合成、放置、熔煉、火把、夜晚）與畫面截圖。
+Automated survival test: gather, craft, place, smelt, torches and night, with screenshots.
+每一步：["wait", 影格] ["capture", 名稱] ["play"] ["move", 前後, 左右, 影格, 跳, 衝刺] ["look", 偏航, 俯仰]
+["mine", 影格] ["waits", 秒] ["minehold"] ["minestop"] ["use"] ["slot", i] ["give", 編號, 數量] ["hold", 編號] ["throw", 數]
+["time", 時刻] ["home", 俯仰] ["face", 偏航, 俯仰] ["pitch", 俯仰] ["turn", 偏航差] ["openinv"] ["close"]
+["craft", 產物, 次數] ["mouse", x比例, y比例] ["fillfurnace", 輸入, 數, 燃料, 數] ["hurt", 量] ["dump"] ["findtree"] ["quit"]
+##
+變數 啟用 = 真;
+變數 全新 = 真;
+變數 步驟 = [
+    ["wait", 90], ["capture", "cap-01-title"],
+    ["play"], ["wait", 20],
+    ["findtree"], ["wait", 15], ["pitch", 0.0d], ["capture", "cap-02-tree"],
+    ["minehold"], ["waits", 1.6d], ["capture", "cap-03-cracks"], ["waits", 2.5d], ["minestop"], ["wait", 5],
+    ["pitch", -0.75d], ["minehold"], ["waits", 4.0d], ["minestop"], ["pitch", 0.55d], ["minehold"], ["waits", 4.0d], ["minestop"], ["waits", 1.0d], ["dump"],
+    ["give", 5, 4], ["hold", 5], ["throw", 1], ["pitch", -0.3d], ["waits", 0.4d], ["capture", "cap-04-drops"], ["waits", 2.0d],
+    ["openinv"], ["craft", 9, 5], ["craft", 18, 1], ["craft", 100, 2], ["mouse", 0.305d, 0.679d], ["wait", 5], ["capture", "cap-05-inventory"], ["dump"],
+    ["close"], ["hold", 18], ["turn", 3.1416d], ["pitch", -0.85d], ["wait", 5], ["use"], ["wait", 10], ["capture", "cap-06-table-placed"],
+    ["use"], ["wait", 5], ["craft", 110, 1], ["give", 14, 20], ["give", 101, 6], ["give", 17, 3], ["craft", 100, 1], ["craft", 111, 1], ["craft", 19, 1], ["craft", 21, 2], ["give", 9, 8], ["craft", 20, 1], ["mouse", 0.62d, 0.3d], ["wait", 5], ["capture", "cap-07-table-ui"], ["dump"],
+    ["close"], ["hold", 19], ["turn", -1.5708d], ["pitch", -0.85d], ["wait", 5], ["use"], ["wait", 5], ["use"], ["wait", 5], ["fillfurnace", 17, 3, 101, 2], ["waits", 11.0d], ["capture", "cap-09-furnace"],
+    ["close"], ["hold", 20], ["turn", 3.1416d], ["pitch", -1.15d], ["wait", 5], ["use"], ["wait", 5], ["use"], ["wait", 5], ["mouse", 0.45d, 0.4d], ["wait", 3], ["capture", "cap-09b-chest"], ["savecheck"],
+    ["close"], ["hold", 111], ["pitch", -1.2d], ["minehold"], ["waits", 0.5d], ["capture", "cap-08-stone-pick"], ["waits", 3.0d], ["minestop"], ["dump"],
+    ["hold", 21], ["turn", 1.5708d], ["pitch", -0.85d], ["wait", 5], ["use"], ["time", 0.93d], ["wait", 20], ["pitch", -0.3d], ["wait", 10], ["capture", "cap-10-torch-night"],
+    ["waits", 14.0d], ["capture", "cap-11-night-creatures"], ["waits", 10.0d], ["dump"],
+    ["hurt", 7], ["wait", 10], ["capture", "cap-12-hurt"],
+    ["quit"]
+];

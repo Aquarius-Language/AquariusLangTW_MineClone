@@ -1,0 +1,18 @@
+C:\Program Files\dotnet\dotnet.exe
+name, driver_version, memory.total [MiB]
+NVIDIA GeForce RTX 4070 Laptop GPU, 616.92, 8188 MiB
+bench.aqua: Expected next token to be ), got ILLEGAL instead.
+No prefix parse function for ILLEGAL(^) found.
+No prefix parse function for >(>) found.
+Expected next token to be ), got INT instead.
+No prefix parse function for )()) found.
+No prefix parse function for )()) found.
+No prefix parse function for *(*) found.
+Expected next token to be ), got ILLEGAL instead.
+No prefix parse function for ILLEGAL(^) found.
+No prefix parse function for >(>) found.
+Expected next token to be ), got INT instead.
+No prefix parse function for )()) found.
+No prefix parse function for )()) found.
+No prefix parse function for ILLEGAL() found.
+Could not find file 'C:\OfficialProjects\AquariusLangTW_MineClone\tools\bench\bench.wasm'.

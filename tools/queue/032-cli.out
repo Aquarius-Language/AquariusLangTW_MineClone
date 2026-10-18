@@ -1,0 +1,19 @@
+C:\OfficialProjects\AquariusLangTW\AquariusDesktop\runtime\ScriptRunner.cs(71,16): warning CS8603: Possible null reference return. [C:\OfficialProjects\AquariusLangTW\AquariusDesktop\AquariusDesktop.csproj]
+C:\OfficialProjects\AquariusLangTW\AquariusDesktop\runtime\ScriptRunner.cs(93,16): warning CS8603: Possible null reference return. [C:\OfficialProjects\AquariusLangTW\AquariusDesktop\AquariusDesktop.csproj]
+C:\OfficialProjects\AquariusLangTW\AquariusDesktop\DesktopBuiltins.cs(103,28): warning CS8603: Possible null reference return. [C:\OfficialProjects\AquariusLangTW\AquariusDesktop\AquariusDesktop.csproj]
+C:\OfficialProjects\AquariusLangTW\AquariusDesktop\DesktopBuiltins.cs(204,33): warning CS8604: Possible null reference argument for parameter 'value' in 'StringObj.StringObj(string value)'. [C:\OfficialProjects\AquariusLangTW\AquariusDesktop\AquariusDesktop.csproj]
+C:\OfficialProjects\AquariusLangTW\AquariusDesktop\DesktopBuiltins.cs(205,33): warning CS8604: Possible null reference argument for parameter 'value' in 'StringObj.StringObj(string value)'. [C:\OfficialProjects\AquariusLangTW\AquariusDesktop\AquariusDesktop.csproj]
+C:\OfficialProjects\AquariusLangTW\AquariusDesktop\DesktopBuiltins.cs(216,16): warning CS8603: Possible null reference return. [C:\OfficialProjects\AquariusLangTW\AquariusDesktop\AquariusDesktop.csproj]
+C:\OfficialProjects\AquariusLangTW\AquariusDesktop\graphics\ProcessingModule.cs(181,85): warning CS8602: Dereference of a possibly null reference. [C:\OfficialProjects\AquariusLangTW\AquariusDesktop\AquariusDesktop.csproj]
+Build succeeded.
+C:\OfficialProjects\AquariusLangTW\AquariusDesktop\runtime\ScriptRunner.cs(71,16): warning CS8603: Possible null reference return. [C:\OfficialProjects\AquariusLangTW\AquariusDesktop\AquariusDesktop.csproj]
+C:\OfficialProjects\AquariusLangTW\AquariusDesktop\runtime\ScriptRunner.cs(93,16): warning CS8603: Possible null reference return. [C:\OfficialProjects\AquariusLangTW\AquariusDesktop\AquariusDesktop.csproj]
+C:\OfficialProjects\AquariusLangTW\AquariusDesktop\DesktopBuiltins.cs(103,28): warning CS8603: Possible null reference return. [C:\OfficialProjects\AquariusLangTW\AquariusDesktop\AquariusDesktop.csproj]
+C:\OfficialProjects\AquariusLangTW\AquariusDesktop\DesktopBuiltins.cs(204,33): warning CS8604: Possible null reference argument for parameter 'value' in 'StringObj.StringObj(string value)'. [C:\OfficialProjects\AquariusLangTW\AquariusDesktop\AquariusDesktop.csproj]
+C:\OfficialProjects\AquariusLangTW\AquariusDesktop\DesktopBuiltins.cs(205,33): warning CS8604: Possible null reference argument for parameter 'value' in 'StringObj.StringObj(string value)'. [C:\OfficialProjects\AquariusLangTW\AquariusDesktop\AquariusDesktop.csproj]
+C:\OfficialProjects\AquariusLangTW\AquariusDesktop\DesktopBuiltins.cs(216,16): warning CS8603: Possible null reference return. [C:\OfficialProjects\AquariusLangTW\AquariusDesktop\AquariusDesktop.csproj]
+C:\OfficialProjects\AquariusLangTW\AquariusDesktop\graphics\ProcessingModule.cs(181,85): warning CS8602: Dereference of a possibly null reference. [C:\OfficialProjects\AquariusLangTW\AquariusDesktop\AquariusDesktop.csproj]
+    7 Warning(s)
+    0 Error(s)
+Compiled 12 script(s) to C:\OfficialProjects\AquariusLangTW_MineClone\build\aquacraft.wasm
+Build complete.

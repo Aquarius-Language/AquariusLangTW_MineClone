@@ -1,0 +1,20 @@
+?? AquariusLang_Prompts.docx
+Switched to a new branch 'feature/wgpu-window-input'
+M  AquariusCore/graphics/IWgpuBackend.cs
+M  AquariusCore/graphics/WgpuRuntime.Host.cs
+M  AquariusCore/graphics/WgpuRuntime.cs
+M  AquariusCore/graphics/WgpuShaderAbi.cs
+M  AquariusCore/graphics/WgpuTextures.cs
+M  AquariusCore/hosting/capability-host.mjs
+M  AquariusCore/hosting/wgpu-textures.mjs
+M  AquariusCore/runtime/LibraryCatalog.Generated.cs
+M  AquariusDesktop/graphics/ProcessingModule.cs
+M  AquariusDesktop/graphics/SilkWgpuBackend.cs
+M  AquariusDesktop/graphics/WGPU.md
+M  AquariusDesktop/graphics/WgpuCompute.cs
+M  AquariusDesktop/graphics/WgpuDevice.cs
+M  AquariusDesktop/graphics/WgpuModule.cs
+A  AquariusWebCompiler/browser/wgpu-window.mjs
+M  AquariusWebCompiler/browser/wgpu.mjs
+A  AquariusWebCompiler/tests/wgpu-window.test.mjs
+?? AquariusLang_Prompts.docx

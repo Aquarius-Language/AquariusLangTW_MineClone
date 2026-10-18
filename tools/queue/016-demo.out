@@ -1,0 +1,4 @@
+main.aqua: Expected next token to be LET, got ; instead.
+No prefix parse function for )()) found.
+Expected next token to be :, got ; instead.
+No prefix parse function for }(}) found.

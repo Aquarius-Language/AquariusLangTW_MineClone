@@ -1,0 +1,21 @@
+✔ mip payload dimensions include cube layers and rectangular tails (1.5536ms)
+✔ half floats and gzip output size are checked before GPU upload (3.3821ms)
+✔ named texture bindings validate dimensions, names and duplicate slots (0.8426ms)
+✔ native decompression matches fallback and rejects corrupt trailers and oversized payloads (16.401ms)
+✔ storage buffers bind read-only at group 2 bindings 9..15 beside named textures (2.7518ms)
+✔ DOM key codes map to GLFW numbering shared with the desktop host (0.2397ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 121.3871
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:12.53
+finished 
